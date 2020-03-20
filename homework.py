@@ -9,13 +9,13 @@ load_dotenv()
 
 def get_status(user_id):
     access_token = os.getenv("access_token")
-
+    url = 'https://api.vk.com/method/users.get'
     params = {"user_ids": user_id,
               "access_token": access_token,
               "v": '5.92',
               "fields": "online"
     }
-    response = requests.post('https://api.vk.com/method/users.get', params).json()
+    response = requests.post(url, params).json()
     data = response["response"][0]
     return data["online"]  # Верните статус пользователя в ВК
 
@@ -31,7 +31,7 @@ def sms_sender(sms_text):
     message = client.messages.create(
                             body=sms_text,
                             from_=number_from,
-                            to=number_to
+                            to=number_to,
                             )
     return message.sid  # Верните sid отправленного сообщения из Twilio
 
