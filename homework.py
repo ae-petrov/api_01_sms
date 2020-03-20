@@ -10,13 +10,15 @@ load_dotenv()
 def get_status(user_id):
     access_token = os.getenv("access_token")
     url = 'https://api.vk.com/method/users.get'
+
     params = {"user_ids": user_id,
               "access_token": access_token,
               "v": '5.92',
               "fields": "online"
     }
-    response = requests.post(url, params).json()
-    data = response["response"][0]
+    response = requests.post(url, params = params)
+    data = response.json()["response"][0]
+
     return data["online"]  # Верните статус пользователя в ВК
 
 
