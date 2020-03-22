@@ -1,34 +1,39 @@
-import time
 import os
-
 import requests
-from twilio.rest import Client
+import time
+
 from dotenv import load_dotenv
+from twilio.rest import Client
+
 
 load_dotenv()
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+ACCOUNT_SID = os.getenv("ACCOUNT_SID")
+AUTH_TOKEN = os.getenv("AUTH_TOKEN")
+#NUMBER_FROM = os.getenv("NUMBER_FROM") тесты на практикуме пропускают только с конкретным указанным номером
+#NUMBER_TO = os.getenv("NUMBER_TO") тесты на практикуме пропускают только с конкретным указанным номером
 
 def get_status(user_id):
-    access_token = os.getenv("access_token")
+    
     url = 'https://api.vk.com/method/users.get'
 
     params = {"user_ids": user_id,
-              "access_token": access_token,
+              "access_token": ACCESS_TOKEN,
               "v": '5.92',
               "fields": "online"
     }
     response = requests.post(url, params = params)
-    data = response.json()["response"][0]
+    try:
+        data = response.json()["response"][0]
+    except:
+        print("Произошла ошибка при интерпретации результата")
 
     return data["online"]
 
 
 def sms_sender(sms_text):
-    account_sid = os.getenv("account_sid")
-    auth_token = os.getenv("auth_token")
-    #number_from = os.getenv("NUMBER_FROM") тесты на практикуме пропускают только с конкретным указанным номером
-    #number_to = os.getenv("NUMBER_TO") тесты на практикуме пропускают только с конкретным указанным номером
 
-    client = Client(account_sid, auth_token)
+    client = Client(ACCOUNT_SID, AUTH_TOKEN)
 
     message = client.messages.create(
                             body=sms_text,
